@@ -112,7 +112,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <a
-            href="https://github.com"
+            href="https://github.com/rwitzlib"
             target="_blank"
             rel="noopener noreferrer"
             className="text-slate-400 hover:text-white transition-colors duration-200"
@@ -121,7 +121,7 @@ export default function Hero() {
             <Github size={24} />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/robert-witzlib/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-slate-400 hover:text-white transition-colors duration-200"
