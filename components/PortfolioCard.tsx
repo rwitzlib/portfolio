@@ -13,6 +13,12 @@ interface PortfolioCardProps {
   activeIndex: number;
 }
 
+// Check if the file is a video
+const isVideo = (src: string) => {
+  const videoExtensions = [".mp4", ".webm", ".ogg", ".mov"];
+  return videoExtensions.some((ext) => src.toLowerCase().endsWith(ext));
+};
+
 export default function PortfolioCard({
   title,
   description,
@@ -115,14 +121,25 @@ export default function PortfolioCard({
       >
         {/* Card inner content */}
         <div className="relative w-full h-full p-6 flex flex-col">
-          {/* Screenshot placeholder area */}
+          {/* Screenshot/Video area */}
           <div className="flex-1 bg-white/50 rounded-xl flex items-center justify-center overflow-hidden">
             {image ? (
-              <img
-                src={image}
-                alt={title}
-                className="w-full h-full object-cover"
-              />
+              isVideo(image) ? (
+                <video
+                  src={image}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <img
+                  src={image}
+                  alt={title}
+                  className="w-full h-full object-cover"
+                />
+              )
             ) : (
               <span className="text-slate-600 font-medium italic">
                 Screenshot of {title}

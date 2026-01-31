@@ -10,7 +10,7 @@ const projects = [
     id: 1,
     title: "Cabbage Co",
     description: "Health supplement e-commerce for digestive wellness",
-    image: "/projects/drinkcabbagejuice.png",
+    image: "/projects/drinkcabbagejuice.mp4",
     url: "https://drinkcabbagejuice.com",
   },
   {
