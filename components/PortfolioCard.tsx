@@ -114,15 +114,15 @@ export default function PortfolioCard({
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full h-full rounded-2xl overflow-hidden shadow-2xl"
+        className="block w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-slate-600/50"
         style={{
-          background: "linear-gradient(145deg, #e8ddd5 0%, #d4c4b8 100%)",
+          background: "linear-gradient(145deg, #475569 0%, #334155 100%)",
         }}
       >
         {/* Card inner content */}
         <div className="relative w-full h-full p-6 flex flex-col">
           {/* Screenshot/Video area */}
-          <div className="flex-1 bg-white/50 rounded-xl flex items-center justify-center overflow-hidden">
+          <div className="flex-1 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden shadow-inner">
             {image ? (
               isVideo(image) ? (
                 <video
@@ -141,7 +141,7 @@ export default function PortfolioCard({
                 />
               )
             ) : (
-              <span className="text-slate-600 font-medium italic">
+              <span className="text-slate-400 font-medium italic">
                 Screenshot of {title}
               </span>
             )}
@@ -150,11 +150,11 @@ export default function PortfolioCard({
           {/* Card footer with title */}
           <div className="mt-4 flex items-center justify-between">
             <div>
-              <h3 className="text-slate-800 font-semibold text-lg">{title}</h3>
-              <p className="text-slate-600 text-sm line-clamp-1">{description}</p>
+              <h3 className="text-slate-100 font-semibold text-lg">{title}</h3>
+              <p className="text-slate-400 text-sm line-clamp-1">{description}</p>
             </div>
             <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <ExternalLink className="text-slate-600" size={20} />
+              <ExternalLink className="text-slate-300" size={20} />
             </div>
           </div>
         </div>

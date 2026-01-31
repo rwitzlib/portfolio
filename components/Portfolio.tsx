@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import PortfolioCard from "./PortfolioCard";
 
 // Portfolio projects data
@@ -65,45 +65,52 @@ const projects = [
 ];
 
 export default function Portfolio() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  
-  // Track scroll progress within this section
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  const [isHovering, setIsHovering] = useState(false);
+  const lastScrollTime = useRef(0);
 
-  // Update active index based on scroll progress
+  // Handle wheel events on the cards area with native listener to prevent page scroll
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", (latest) => {
-      // Divide scroll progress into segments for each card
-      const segmentSize = 1 / projects.length;
-      const newIndex = Math.min(
-        Math.floor(latest / segmentSize),
-        projects.length - 1
-      );
-      setActiveIndex(newIndex);
-    });
+    const cardsElement = cardsRef.current;
+    if (!cardsElement) return;
 
-    return () => unsubscribe();
-  }, [scrollYProgress]);
+    const handleWheel = (e: WheelEvent) => {
+      // Prevent page scroll when hovering over cards
+      e.preventDefault();
 
-  // Progress indicator dots
-  const progressOpacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+      // Throttle scroll events
+      const now = Date.now();
+      if (now - lastScrollTime.current < 150) return;
+      lastScrollTime.current = now;
+
+      // Determine scroll direction
+      if (e.deltaY > 0) {
+        // Scrolling down - go to next card
+        setActiveIndex((prev) => Math.min(prev + 1, projects.length - 1));
+      } else if (e.deltaY < 0) {
+        // Scrolling up - go to previous card
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
+      }
+    };
+
+    // Use passive: false to allow preventDefault()
+    cardsElement.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      cardsElement.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   return (
     <section
       id="portfolio"
-      ref={containerRef}
-      className="relative bg-slate-950"
-      style={{ height: `${(projects.length + 1) * 100}vh` }}
+      className="relative bg-slate-950 min-h-screen py-24"
     >
-      {/* Sticky container for cards */}
-      <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
+      <div className="h-full flex flex-col items-center justify-center">
         {/* Section header */}
         <motion.div
-          className="absolute top-24 left-0 right-0 text-center z-10"
+          className="text-center mb-24 relative z-[60]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -112,11 +119,20 @@ export default function Portfolio() {
           <h2 className="text-3xl md:text-4xl font-bold mb-2">
             My <span className="gradient-text">Portfolio</span>
           </h2>
-          <p className="text-slate-400 text-lg">Scroll to explore my work</p>
+          <p className="text-slate-400 text-lg">
+            {isHovering ? "Scroll to browse projects" : "Hover over cards to explore"}
+          </p>
         </motion.div>
 
-        {/* Cards container */}
-        <div className="relative w-full max-w-lg aspect-[4/3] mx-auto mt-8">
+        {/* Cards container - captures wheel events when hovering */}
+        <div
+          ref={cardsRef}
+          className={`relative w-full max-w-lg aspect-[4/3] mx-auto cursor-pointer transition-transform duration-200 ${
+            isHovering ? "scale-105" : ""
+          }`}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
           {projects.map((project, index) => (
             <PortfolioCard
               key={project.id}
@@ -132,22 +148,11 @@ export default function Portfolio() {
         </div>
 
         {/* Progress indicator */}
-        <motion.div
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 flex items-center gap-2"
-          style={{ opacity: progressOpacity }}
-        >
+        <div className="mt-12 flex items-center gap-2">
           {projects.map((_, index) => (
             <button
               key={index}
-              onClick={() => {
-                // Calculate scroll position for this index
-                if (containerRef.current) {
-                  const containerTop = containerRef.current.offsetTop;
-                  const containerHeight = containerRef.current.offsetHeight - window.innerHeight;
-                  const targetScroll = containerTop + (index / projects.length) * containerHeight;
-                  window.scrollTo({ top: targetScroll, behavior: "smooth" });
-                }
-              }}
+              onClick={() => setActiveIndex(index)}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index === activeIndex
                   ? "w-8 bg-blue-500"
@@ -156,25 +161,22 @@ export default function Portfolio() {
               aria-label={`Go to project ${index + 1}`}
             />
           ))}
-        </motion.div>
+        </div>
 
         {/* Current project counter */}
-        <motion.div
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 text-slate-500 text-sm"
-          style={{ opacity: progressOpacity }}
-        >
+        <div className="mt-4 text-slate-500 text-sm">
           <span className="text-white font-medium">{activeIndex + 1}</span>
           <span className="mx-1">/</span>
           <span>{projects.length}</span>
-        </motion.div>
+        </div>
 
         {/* Scroll hint */}
         <motion.p
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-slate-600 text-xs uppercase tracking-wider"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="mt-4 text-slate-600 text-xs uppercase tracking-wider"
+          animate={{ opacity: isHovering ? 1 : [0.5, 1, 0.5] }}
+          transition={{ duration: isHovering ? 0.2 : 2, repeat: isHovering ? 0 : Infinity }}
         >
-          Scroll to navigate
+          {isHovering ? "Scroll to navigate" : "Hover to interact"}
         </motion.p>
       </div>
     </section>
