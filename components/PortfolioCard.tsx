@@ -1,11 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
 
 interface PortfolioCardProps {
   title: string;
-  description: string;
   image: string;
   url: string;
   index: number;
@@ -21,7 +19,6 @@ const isVideo = (src: string) => {
 
 export default function PortfolioCard({
   title,
-  description,
   image,
   url,
   index,
@@ -63,7 +60,6 @@ export default function PortfolioCard({
         rotate: 0,
         scale: 1,
         zIndex: 50,
-        opacity: 1,
       };
     } else if (relativePosition > 0) {
       // Cards behind (stacked)
@@ -73,7 +69,6 @@ export default function PortfolioCard({
         rotate: -relativePosition * baseRotation,
         scale: 1 - relativePosition * 0.03,
         zIndex: 50 - relativePosition,
-        opacity: 1 - relativePosition * 0.15,
       };
     } else {
       // Cards that have cycled to the back
@@ -83,7 +78,6 @@ export default function PortfolioCard({
         rotate: (totalCards + relativePosition) * -baseRotation,
         scale: 1 - (totalCards + relativePosition) * 0.03,
         zIndex: 50 - (totalCards + relativePosition),
-        opacity: 1 - (totalCards + relativePosition) * 0.15,
       };
     }
   };
@@ -92,7 +86,7 @@ export default function PortfolioCard({
 
   return (
     <motion.div
-      className="absolute w-full max-w-lg aspect-[4/3] cursor-pointer group"
+      className="absolute w-[500px] h-[375px] cursor-pointer group"
       style={{
         zIndex: transforms.zIndex,
       }}
@@ -101,7 +95,6 @@ export default function PortfolioCard({
         y: transforms.y,
         rotate: transforms.rotate,
         scale: transforms.scale,
-        opacity: transforms.opacity,
       }}
       transition={{
         type: "spring",
@@ -114,50 +107,33 @@ export default function PortfolioCard({
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-slate-600/50"
-        style={{
-          background: "linear-gradient(145deg, #475569 0%, #334155 100%)",
-        }}
+        className="block w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-slate-600/50 bg-slate-800"
       >
-        {/* Card inner content */}
-        <div className="relative w-full h-full p-6 flex flex-col">
-          {/* Screenshot/Video area */}
-          <div className="flex-1 bg-slate-800 rounded-xl flex items-center justify-center overflow-hidden shadow-inner">
-            {image ? (
-              isVideo(image) ? (
-                <video
-                  src={image}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <img
-                  src={image}
-                  alt={title}
-                  className="w-full h-full object-cover"
-                />
-              )
-            ) : (
-              <span className="text-slate-400 font-medium italic">
-                Screenshot of {title}
-              </span>
-            )}
+        {/* Full card image/video */}
+        {image ? (
+          isVideo(image) ? (
+            <video
+              src={image}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img
+              src={image}
+              alt={title}
+              className="w-full h-full object-cover"
+            />
+          )
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-700 to-slate-800">
+            <span className="text-slate-400 font-medium italic">
+              {title}
+            </span>
           </div>
-          
-          {/* Card footer with title */}
-          <div className="mt-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-slate-100 font-semibold text-lg">{title}</h3>
-              <p className="text-slate-400 text-sm line-clamp-1">{description}</p>
-            </div>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <ExternalLink className="text-slate-300" size={20} />
-            </div>
-          </div>
-        </div>
+        )}
       </a>
     </motion.div>
   );
