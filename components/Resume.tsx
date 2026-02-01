@@ -6,39 +6,30 @@ import { Briefcase, GraduationCap, Download } from "lucide-react";
 const experiences = [
   {
     type: "work",
-    title: "Senior Web Developer",
-    company: "Tech Company",
-    period: "2022 - Present",
+    title: "Software Engineer",
+    company: "Optum",
+    period: "Oct 2022 - Present",
     description:
-      "Leading frontend development for enterprise applications, mentoring junior developers, and implementing modern development practices.",
-    highlights: ["React", "TypeScript", "Node.js", "AWS"],
+      "Building internal tools, CI/CD pipelines, and healthcare services. Designed Mjolnir for automated test suites and database migrations. Created Clinical Data Service for HIPAA-compliant FHIR data retrieval.",
+    highlights: ["AWS", "Terraform", "Docker", "C# / .NET"],
   },
   {
     type: "work",
-    title: "Full Stack Developer",
-    company: "Digital Agency",
-    period: "2020 - 2022",
+    title: "Software Engineer",
+    company: "Change Healthcare",
+    period: "May 2020 - Oct 2022",
     description:
-      "Developed custom web applications for diverse clients, from startups to established businesses, focusing on performance and UX.",
-    highlights: ["Next.js", "PostgreSQL", "GraphQL", "Docker"],
-  },
-  {
-    type: "work",
-    title: "Junior Developer",
-    company: "Software Startup",
-    period: "2018 - 2020",
-    description:
-      "Started my professional journey building features, fixing bugs, and learning best practices in a fast-paced startup environment.",
-    highlights: ["JavaScript", "React", "REST APIs", "Git"],
+      "Developed healthcare APIs and led team building mock FHIR server. Implemented breast cancer risk assessment API with Epic EMR integration. Maintained 3000+ automated tests across applications.",
+    highlights: ["C# / .NET", "FHIR", "SQL", "GitLab"],
   },
   {
     type: "education",
-    title: "Computer Science Degree",
-    company: "University",
-    period: "2014 - 2018",
+    title: "B.S. Computer Science",
+    company: "University of Wisconsin - Madison",
+    period: "Sep 2016 - Aug 2020",
     description:
-      "Bachelor's degree in Computer Science with focus on software engineering and web technologies.",
-    highlights: ["Algorithms", "Data Structures", "Web Development"],
+      "Bachelor of Science in Computer Science. Coursework included Operating Systems, Algorithms, Data Structures, Databases, and Cybersecurity.",
+    highlights: ["Algorithms", "Data Structures", "Databases", "Cybersecurity"],
   },
 ];
 
@@ -61,7 +52,8 @@ export default function Resume() {
             My professional journey and educational background
           </p>
           <motion.a
-            href="/resume.pdf"
+            href="/resume/RobWitzlib-Resume.pdf"
+            download="RobWitzlib-Resume.pdf"
             className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full transition-all duration-200 hover:scale-105"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
