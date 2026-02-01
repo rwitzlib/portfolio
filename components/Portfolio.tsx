@@ -109,13 +109,13 @@ export default function Portfolio() {
       if (now - lastScrollTime.current < 150) return;
       lastScrollTime.current = now;
 
-      // Determine scroll direction
+      // Determine scroll direction with continuous looping
       if (e.deltaY > 0) {
-        // Scrolling down - go to next card
-        setActiveIndex((prev) => Math.min(prev + 1, projects.length - 1));
+        // Scrolling down - go to next card (wrap to first if at end)
+        setActiveIndex((prev) => (prev + 1) % projects.length);
       } else if (e.deltaY < 0) {
-        // Scrolling up - go to previous card
-        setActiveIndex((prev) => Math.max(prev - 1, 0));
+        // Scrolling up - go to previous card (wrap to last if at beginning)
+        setActiveIndex((prev) => (prev - 1 + projects.length) % projects.length);
       }
     };
 
